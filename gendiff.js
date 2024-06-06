@@ -3,6 +3,7 @@
 const { Command } = require('commander');
 const { version } = require('./package.json');
 const parseFile = require('./parser');
+const diffLines = require('./diff-lines');
 
 const program = new Command();
 
@@ -10,8 +11,7 @@ const genDiff = (filepath1, filepath2) => {
   const file1Data = parseFile(filepath1);
   const file2Data = parseFile(filepath2);
   
-  console.log('File1 data:', file1Data);
-  console.log('File2 data:', file2Data);
+  return diffLines(file1Data, file2Data)
 };
 
 program
@@ -25,7 +25,8 @@ program
 
 program
   .action((filepath1, filepath2) => {
-    genDiff(filepath1, filepath2);
+    const diff = genDiff(filepath1, filepath2);
+    console.log(diff);
   })
 
 program.parse(process.argv);
