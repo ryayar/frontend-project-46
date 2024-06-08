@@ -1,5 +1,5 @@
-const path = require('path');
-const fs = require('fs');
+import path from 'path';
+import fs from 'fs';
 
 const parseFile = (filepath) => {
   const fullPath = path.resolve(process.cwd(), filepath);
@@ -14,4 +14,4 @@ const parseFile = (filepath) => {
   }
 };
 
-module.exports = parseFile;
+export default parseFile;

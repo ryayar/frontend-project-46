@@ -1,4 +1,4 @@
-const _ = require('lodash');
+import _ from 'lodash';
 
 const diff = (file1Data, file2Data) => {
   const keys = _.sortBy(_.union(_.keys(file1Data), _.keys(file2Data)));
@@ -17,8 +17,7 @@ const diff = (file1Data, file2Data) => {
     }
     return [];
   });
-  
   return `{\n${_.flatten(diffLines).join('\n')}\n}`;
 };
 
-module.exports = diff;
+export default diff;
