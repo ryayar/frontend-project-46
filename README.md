@@ -10,3 +10,5 @@
 [Get different .json](https://asciinema.org/connect/ee04cde9-55a5-4d1d-b84a-926502916415)
 
 [Get different .yml or .yaml](https://asciinema.org/a/6DBfUkUVVDos8HxHOlsvtCnx5)
+
+[Get different nested structure](https://asciinema.org/a/feEeJyMlaUhqoB5qAaNkWBHRf)
