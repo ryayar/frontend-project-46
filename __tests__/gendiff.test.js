@@ -88,7 +88,7 @@ test('parseFile unsupported format', () => {
 
 test('throws an error for unknown format', () => {
   const format = 'tralala';
-  expect(() => getFormat([], format)).toThrowError(`Unavailing format - "${format}"`);
+  expect(() => getFormat([], format)).toThrow(`Unavailing format - "${format}"`);
 });
 
 test('gendiff formatPlain', () => {
