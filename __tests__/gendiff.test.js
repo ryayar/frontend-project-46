@@ -2,7 +2,7 @@ import path from 'path';
 import { test, expect } from '@jest/globals';
 import genDiff from '../src/index.js';
 import parseFile from '../src/parsers.js';
-import formatStylish from '../src/stylish.js';
+import getFormat from '../src/formatters/index.js';
 
 const getFixturePath = (filename) => path.join('__fixtures__', filename);
 
@@ -83,18 +83,27 @@ test('gendiff fail', () => {
 });
 
 test('parseFile unsupported format', () => {
-  const unsupportedPath = getFixturePath('unsupported/file1.txt');
-  expect(() => parseFile(unsupportedPath)).toThrow('Unsupported file format: .txt');
+  expect(() => parseFile('', '.txt')).toThrow('Unsupported file format: .txt');
 });
 
-test('formatStylish unknown node type', () => {
-  const invalidNode = {
-    type: 'unknown',
-    key: 'someKey',
-    value: 'someValue',
-  };
+test('throws an error for unknown format', () => {
+  const format = 'tralala';
+  expect(() => getFormat([], format)).toThrowError(`Unavailing format - "${format}"`);
+});
 
-  const tree = [invalidNode];
-
-  expect(() => formatStylish(tree)).toThrow('Unknown type: unknown');
+test('gendiff formatPlain', () => {
+  const filepath1 = getFixturePath('json/file3.json');
+  const filepath2 = getFixturePath('json/file4.json');
+  const expected = `Property 'common.follow' was added with value: false
+Property 'common.setting2' was removed
+Property 'common.setting3' was updated. From true to null
+Property 'common.setting4' was added with value: 'blah blah'
+Property 'common.setting5' was added with value: [complex value]
+Property 'common.setting6.doge.wow' was updated. From '' to 'so much'
+Property 'common.setting6.ops' was added with value: 'vops'
+Property 'group1.baz' was updated. From 'bas' to 'bars'
+Property 'group1.nest' was updated. From [complex value] to 'str'
+Property 'group2' was removed
+Property 'group3' was added with value: [complex value]`;
+  expect(genDiff(filepath1, filepath2, 'plain')).toBe(expected);
 });
