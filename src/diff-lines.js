@@ -15,7 +15,6 @@ const diff = (file1Data, file2Data) => {
     if (_.has(file2Data, key)) {
       return `  + ${key}: ${file2Data[key]}`;
     }
-    return [];
   });
   return `{\n${_.flatten(diffLines).join('\n')}\n}`;
 };
