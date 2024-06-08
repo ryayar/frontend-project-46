@@ -1,4 +1,4 @@
-import parseFile from './parser.js';
+import parseFile from './parsers.js';
 import diffLines from './diff-lines.js';
 
 const genDiff = (filepath1, filepath2) => {
