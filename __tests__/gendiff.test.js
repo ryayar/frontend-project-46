@@ -5,10 +5,15 @@ import parseFile from '../src/parsers.js';
 
 const getFixturePath = (filename) => path.join('__fixtures__', filename);
 
-test('gendiff flat JSON files', () => {
-  const jsonPath1 = getFixturePath('json/file1.json');
-  const jsonPath2 = getFixturePath('json/file2.json');
-  const expected = `{
+const runGenDiffTest = (file1Path, file2Path, expected) => {
+  test(`gendiff ${path.extname(file1Path)} files`, () => {
+    const filepath1 = getFixturePath(file1Path);
+    const filepath2 = getFixturePath(file2Path);
+    expect(genDiff(filepath1, filepath2)).toBe(expected);
+  });
+};
+
+const expectedDiff = `{
   - follow: false
     host: hexlet.io
   - proxy: 123.234.53.22
@@ -17,38 +22,9 @@ test('gendiff flat JSON files', () => {
   + verbose: true
 }`;
 
-  expect(genDiff(jsonPath1, jsonPath2)).toBe(expected);
-});
-
-test('gendiff flat YAML files', () => {
-  const yamlPath1 = getFixturePath('yaml/file1.yaml');
-  const yamlPath2 = getFixturePath('yaml/file2.yaml');
-  const expected = `{
-  - follow: false
-    host: hexlet.io
-  - proxy: 123.234.53.22
-  - timeout: 50
-  + timeout: 20
-  + verbose: true
-}`;
-
-  expect(genDiff(yamlPath1, yamlPath2)).toBe(expected);
-});
-
-test('gendiff flat YML files', () => {
-  const ymlPath1 = getFixturePath('yml/file1.yml');
-  const ymlPath2 = getFixturePath('yml/file2.yml');
-  const expected = `{
-  - follow: false
-    host: hexlet.io
-  - proxy: 123.234.53.22
-  - timeout: 50
-  + timeout: 20
-  + verbose: true
-}`;
-
-  expect(genDiff(ymlPath1, ymlPath2)).toBe(expected);
-});
+runGenDiffTest('json/file1.json', 'json/file2.json', expectedDiff);
+runGenDiffTest('yaml/file1.yaml', 'yaml/file2.yaml', expectedDiff);
+runGenDiffTest('yml/file1.yml', 'yml/file2.yml', expectedDiff);
 
 test('gendiff fail', () => {
   expect(() => genDiff('', '')).toThrow();
