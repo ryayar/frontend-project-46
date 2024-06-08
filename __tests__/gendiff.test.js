@@ -107,3 +107,37 @@ Property 'group2' was removed
 Property 'group3' was added with value: [complex value]`;
   expect(genDiff(filepath1, filepath2, 'plain')).toBe(expected);
 });
+
+test('gendiff formatJson', () => {
+  const diff = [
+    {
+      key: 'common',
+      type: 'nested',
+      children: [
+        { key: 'follow', type: 'added', value: false },
+        { key: 'setting1', type: 'unchanged', value: 'Value 1' },
+      ],
+    },
+  ];
+
+  const expectedJson = `[
+  {
+    "key": "common",
+    "type": "nested",
+    "children": [
+      {
+        "key": "follow",
+        "type": "added",
+        "value": false
+      },
+      {
+        "key": "setting1",
+        "type": "unchanged",
+        "value": "Value 1"
+      }
+    ]
+  }
+]`;
+
+  expect(getFormat(diff, 'json')).toBe(expectedJson);
+});
