@@ -9,8 +9,8 @@ const parseFile = (filepath) => {
   switch (ext) {
     case '.json':
       return JSON.parse(fileContent);
-    // default:
-    //   throw new Error(`Unsupported file format: ${ext}`);
+    default:
+      throw new Error(`Unsupported file format: ${ext}`);
   }
 };
 
