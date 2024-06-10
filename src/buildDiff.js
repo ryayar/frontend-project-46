@@ -1,11 +1,12 @@
 import _ from 'lodash';
 
-const makeNode = (name, type, value, oldValue = undefined, newValue = undefined) => {
-  const node = { name, type, value };
-  if (oldValue !== undefined) node.oldValue = oldValue;
-  if (newValue !== undefined) node.newValue = newValue;
-  return node;
-};
+const makeNode = (name, type, value, oldValue, newValue) => ({
+  name,
+  type,
+  value,
+  ...(oldValue !== undefined && { oldValue }),
+  ...(newValue !== undefined && { newValue }),
+});
 
 const buildDiff = (obj1, obj2) => {
   const keys = _.sortBy(_.union(Object.keys(obj1), Object.keys(obj2)));
