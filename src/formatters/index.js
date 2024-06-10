@@ -5,6 +5,7 @@ import json from './json.js';
 const getFormat = (diff, format) => {
   switch (format) {
     case 'stylish':
+      // console.log(diff)
       return stylish(diff);
     case 'plain':
       return plain(diff);

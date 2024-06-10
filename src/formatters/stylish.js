@@ -1,44 +1,48 @@
-/* eslint-disable no-use-before-define */
 import _ from 'lodash';
 
-const getSpaces = (deep) => ' '.repeat(deep * 4 - 2);
-const getAllFromObj = (obj, deep) => {
-  const spaces = getSpaces(deep);
-  const keys = _.sortBy(_.keys(obj));
+const checkVal = (propValue, depth = 0) => {
+  const indent = '    '.repeat(depth);
 
-  const res = keys.map((key) => {
-    if (!_.isObject(obj[key])) {
-      return `${spaces}  ${key}: ${obj[key]}`;
+  if (!_.isObject(propValue)) {
+    return propValue;
+  }
+  const entries = Object.entries(propValue);
+  const result = entries.map(([key, value]) => `    ${indent}${key}: ${checkVal(value, depth + 1)}`);
+
+  return [
+    '{',
+    ...result,
+    `${indent}}`,
+  ].join('\n');
+};
+
+const makeRes = (diff, depth = 0) => {
+  const spaces = '    '.repeat(depth);
+  const result = diff.flatMap((dif) => {
+    switch (dif.type) {
+      case 'same':
+        return `  ${spaces}  ${dif.name}: ${checkVal(dif.value, depth + 1)}`;
+      case 'added':
+        return `  ${spaces}+ ${dif.name}: ${checkVal(dif.value, depth + 1)}`;
+      case 'deleted':
+        return `  ${spaces}- ${dif.name}: ${checkVal(dif.value, depth + 1)}`;
+      case 'updated':
+        return [
+          `  ${spaces}- ${dif.name}: ${checkVal(dif.oldValue, depth + 1)}`,
+          `  ${spaces}+ ${dif.name}: ${checkVal(dif.newValue, depth + 1)}`,
+        ];
+      case 'nested':
+        return `  ${spaces}  ${dif.name}: ${makeRes(dif.value, depth + 1)}`;
+      default:
+        throw new Error('Unknown node value');
     }
-    return `${spaces}  ${key}: {\n${getAllFromObj(obj[key], deep + 1)}\n${spaces}  }`;
   });
-  return res.join('\n');
+
+  return [
+    '{',
+    ...result,
+    `${spaces}}`,
+  ].join('\n');
 };
-
-const checkVal = (val, deep) => {
-  const spaces = getSpaces(deep);
-  if (!_.isObject(val)) return val;
-  if (Array.isArray(val)) return `{\n${genDiff(val, deep + 1)}\n${spaces}  }`;
-
-  return `{\n${getAllFromObj(val, deep + 1)}\n${spaces}  }`;
-};
-
-const addStr = {
-  same: (dif, spaces, deep) => `${spaces}  ${dif.name}: ${checkVal(dif.value, deep)}`,
-  added: (dif, spaces, deep) => `${spaces}+ ${dif.name}: ${checkVal(dif.value, deep)}`,
-  deleted: (dif, spaces, deep) => `${spaces}- ${dif.name}: ${checkVal(dif.value, deep)}`,
-  updated: (dif, spaces, deep) => `${spaces}- ${dif.name}: ${checkVal(dif.oldValue, deep)}
-${spaces}+ ${dif.name}: ${checkVal(dif.newValue, deep)}`,
-  object: (dif, spaces, deep) => `${spaces}  ${dif.name}: ${checkVal(dif.value, deep)}`,
-};
-
-const genDiff = (diff, deep = 1) => {
-  const spaces = getSpaces(deep);
-
-  const res = diff.map((dif) => addStr[dif.status](dif, spaces, deep));
-  return res.join('\n');
-};
-
-const makeRes = (diff) => `{\n${genDiff(diff)}\n}`;
 
 export default makeRes;
