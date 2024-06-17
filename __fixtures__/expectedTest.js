@@ -85,6 +85,6 @@ export const expectedJson = `[
 
 export const throwUnsupportedFileFormat = 'Unsupported file format: .txt';
 
-export const throwStylishUnknownNodeValue = 'Unknown node value';
+export const throwStylishUnknownNodeValue = 'Unknown node type';
 
 export const throwUnknownFormat = 'Unavailing format - "tralala"';

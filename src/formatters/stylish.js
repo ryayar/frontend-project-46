@@ -21,20 +21,20 @@ const makeRes = (diff, depth = 0) => {
   const result = diff.flatMap((dif) => {
     switch (dif.type) {
       case 'same':
-        return `  ${spaces}  ${dif.name}: ${checkVal(dif.value, depth + 1)}`;
+        return `  ${spaces}  ${dif.name}: ${checkVal(dif.beforeValue, depth + 1)}`;
       case 'added':
-        return `  ${spaces}+ ${dif.name}: ${checkVal(dif.value, depth + 1)}`;
+        return `  ${spaces}+ ${dif.name}: ${checkVal(dif.afterValue, depth + 1)}`;
       case 'deleted':
-        return `  ${spaces}- ${dif.name}: ${checkVal(dif.value, depth + 1)}`;
+        return `  ${spaces}- ${dif.name}: ${checkVal(dif.beforeValue, depth + 1)}`;
       case 'updated':
         return [
-          `  ${spaces}- ${dif.name}: ${checkVal(dif.oldValue, depth + 1)}`,
-          `  ${spaces}+ ${dif.name}: ${checkVal(dif.newValue, depth + 1)}`,
+          `  ${spaces}- ${dif.name}: ${checkVal(dif.beforeValue, depth + 1)}`,
+          `  ${spaces}+ ${dif.name}: ${checkVal(dif.afterValue, depth + 1)}`,
         ];
       case 'nested':
-        return `  ${spaces}  ${dif.name}: ${makeRes(dif.value, depth + 1)}`;
+        return `  ${spaces}  ${dif.name}: ${makeRes(dif.children, depth + 1)}`;
       default:
-        throw new Error('Unknown node value');
+        throw new Error('Unknown node type');
     }
   });
 

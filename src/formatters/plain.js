@@ -11,9 +11,9 @@ const checkValue = (val) => {
 };
 
 const addStr = {
-  added: (dif, way) => `Property '${way}${dif.name}' was added with value: ${checkValue(dif.value)}`,
+  added: (dif, way) => `Property '${way}${dif.name}' was added with value: ${checkValue(dif.afterValue)}`,
   deleted: (dif, way) => `Property '${way}${dif.name}' was removed`,
-  updated: (dif, way) => `Property '${way}${dif.name}' was updated. From ${checkValue(dif.oldValue)} to ${checkValue(dif.newValue)}`,
+  updated: (dif, way) => `Property '${way}${dif.name}' was updated. From ${checkValue(dif.beforeValue)} to ${checkValue(dif.afterValue)}`,
 };
 
 const genDiff = (diff, way = '') => {
@@ -22,7 +22,7 @@ const genDiff = (diff, way = '') => {
       return addStr[dif.type](dif, way);
     }
     if (dif.type === 'nested') {
-      return genDiff(dif.value, `${way}${dif.name}.`);
+      return genDiff(dif.children, `${way}${dif.name}.`);
     }
     return '';
   }).filter((val) => val !== '');
